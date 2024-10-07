@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image-item {
+    margin: 10px;
+}
+
+img {
+    max-width: 200px;
+    height: auto;
+}

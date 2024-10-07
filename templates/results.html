@@ -1,0 +1,66 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Pencarian</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='images/sdmpktbook.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/sdmpktbook.png') }}">
+</head>
+<body>
+    <div class="search">
+        <form method="POST" action="/" id="searchForm">
+          <div class="search-container">
+            <span class="material-icons">search</span>
+            <input id="searchInput" name="search" placeholder="Cari poster..." />
+            <button type="submit">
+              Go!
+              <span class="material-icons submit-icon">bolt</span>
+            </button>
+          </div>
+        </form>
+        <button type="submit">
+    <h4>Hasil Pencarian untuk "{{ search_term }}"</h4>
+
+    {% if not_found %}
+        <p>Poster dengan kata kunci '{{ search_term }}' tidak ditemukan.</p>
+    {% endif %}
+
+    <!-- Grid untuk gambar -->
+    <div class="gallery">
+        {% for image in images %}
+            <div class="image-item">
+                <img src="{{ url_for('static', filename='images/' ~ image) }}" alt="Poster" onclick="openModal(this)">
+                <div class="description">
+                    <h2>Judul Poster</h2>
+                    <p>Deskripsi singkat tentang poster ini.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modal untuk menampilkan gambar besar -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="Zoomed Image">
+    </div>
+
+    <!-- JavaScript untuk modal -->
+    <script>
+        function openModal(image) {
+            var modal = document.getElementById('imageModal');
+            var modalImg = document.getElementById('modalImage');
+            modal.style.display = 'flex'; // Tampilkan modal
+            modalImg.src = image.src; // Set gambar ke modal
+        }
+
+        function closeModal() {
+            var modal = document.getElementById('imageModal');
+            modal.style.display = 'none'; // Sembunyikan modal
+        }
+    </script>
+
+</body>
+</html>

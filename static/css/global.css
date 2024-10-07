@@ -1,0 +1,412 @@
+/*? global clearing */
+*,
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+:root {
+  --color-black-primary: rgb(0, 0, 0, 0.65);
+  --color-black-secondary: rgb(0, 0, 0, 0.15);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+}
+
+.header__right {
+  display: flex;
+  padding: 10px 20px;
+}
+
+.header__right a {
+  margin-right: 16px;
+  font-weight: 500;
+  color: var(--color-black-primary);
+}
+
+.header__right a:hover {
+  text-decoration: underline;
+}
+
+section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 600px;
+}
+
+.feature img {
+  width: 285px;
+  height: auto;
+}
+
+.search {
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+  gap: 20px;
+  width: 100%;
+}
+
+.search__input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1px solid var(--color-black-secondary);
+  padding: 0 16px;
+  border-radius: 99px;
+}
+
+.search__input:hover {
+  box-shadow: 1px 1px 7px 5px rgba(0, 0, 0, 0.11);
+    -webkit-box-shadow: 1px 1px 7px 5px rgba(0, 0, 0, 0.11);
+    -moz-box-shadow: 1px 1px 7px 5px rgba(0, 0, 0, 0.11);
+}
+
+.search__input input {
+  flex: 1;
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 4px;
+  border: none;
+  outline: none;
+}
+
+.search__input .photo {
+  cursor: pointer;
+}
+
+.search__action {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.search__action button {
+  border: 1px solid transparent;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search__action button:hover {
+  border: 1px solid var(--color-black-secondary);
+}
+
+.language {
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--color-black-primary);
+}
+
+.language a {
+  margin-right: 6px;
+}
+
+/* Mengatur grid untuk galeri gambar */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.image-item img {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.image-item img:hover {
+  transform: scale(1.05); /* Efek zoom kecil saat hover */
+}
+
+/* Modal styling untuk gambar besar */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 999; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Black background with opacity */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal img {
+  max-width: 80%;
+  max-height: 80%;
+  border: 3px solid white;
+}
+
+/* Close button style */
+.modal .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+img {
+  max-width: 200px;
+  height: auto;
+}
+
+/* Bagian Hero untuk background dan teks bergerak */
+.hero {
+    position: relative;
+    height: 100vh; /* Sesuaikan dengan kebutuhan */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* background-image: url('../imgages/background-image.jpg'); Ganti 'your-background-image.jpg' dengan nama file gambar Anda */
+    background-size: cover; /* Mengisi seluruh area */
+    background-color: white;
+    background-position: center; /* Memposisikan gambar di tengah */
+    overflow: hidden; /* Pastikan overflow tidak terlihat */
+}
+
+/* Teks bergerak */
+.moving-text {
+  width: 100%;
+  position: absolute;
+  top: 10%; /* Posisi vertikal teks */
+  background: yellow;
+  white-space: nowrap;
+}
+
+.left-moving .text-container {
+  animation: moveLeft 20s linear infinite;
+}
+
+.right-moving .text-container {
+  animation: moveRight 20s linear infinite;
+}
+
+.text-container p {
+  display: inline-block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: blue;
+}
+
+/* Animasi untuk teks yang bergerak ke kiri */
+@keyframes moveLeft {
+  0% {
+      transform: translateX(100%); /* Start from the right */
+  }
+  100% {
+      transform: translateX(-100%); /* Move to the left */
+  }
+}
+
+/* Animasi untuk teks yang bergerak ke kanan */
+@keyframes moveRight {
+  0% {
+      transform: translateX(-100%); /* Start from the left */
+  }
+  100% {
+      transform: translateX(100%); /* Move to the right */
+  }
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.image-item {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-item img {
+  max-width: 100%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.image-item .description {
+  text-align: center;
+}
+
+.image-item .description h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.image-item .description p {
+  font-size: 14px;
+  margin: 5px 0;
+  color: #555;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal img {
+  max-width: 80%;
+  max-height: 80%;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  background-color: #f9f9f9;
+  width: 600px;
+  padding: 5px;
+}
+
+.search-container input {
+  border: none;
+  outline: none;
+  padding: 10px;
+  font-size: 16px;
+  flex: 1;
+  background-color: transparent;
+}
+
+.search-container .material-icons {
+  font-size: 24px;
+  color: #555;
+  margin-right: 10px;
+}
+
+.search-container .photo {
+  margin-left: 10px;
+}
+
+.search-container button {
+  background-color: #4285f4; /* Warna biru */
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Warna teks putih */
+  font-size: 16px;
+}
+
+.search-container button:hover {
+  background-color: #357ae8; /* Warna biru yang lebih gelap saat hover */
+}
+
+.search-container .submit-icon {
+  font-size: 24px;
+  color: yellow; /* Warna ikon petir putih */
+  margin-right: 5px; /* Jarak antara ikon petir dan teks */
+}
+
+/* Rekomendasi container */
+          .recommendations {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          margin-top: 20px;
+          max-width: 600px;
+          margin: 20px auto;
+      }
+
+      /* Style item rekomendasi */
+      .recommendation-item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 10px;
+      }
+
+      .recommendation-item a {
+          text-decoration: none;
+          color: black;
+          font-size: 18px;
+          margin-right: 10px;
+      }
+
+      /* Label Panas */
+      .hot-label {
+          background-color: #357ae8;
+          color: yellow;
+          padding: 2px 5px;
+          border-radius: 3px;
+          font-size: 12px;
+      }
+
+      /* Style untuk nomor dan ikon */
+      .number {
+          font-size: 22px;
+          color: #357ae8;
+          margin-right: 10px;
+      }
+
+      /* Hover efek */
+      .recommendation-item a:hover {
+          color: blue;
+      }
