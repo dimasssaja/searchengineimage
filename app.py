@@ -1,9 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 import os
 from fuzzywuzzy import fuzz, process
-from werkzeug.utils import secure_filename
-# import mammoth  # Untuk mengonversi file DOCX ke HTML
-import pandas as pd  # Untuk membaca file Excel
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -19,7 +17,7 @@ image_data = {
     'penambalan gigi': ['poster_imunisasi1', 'poster_imunisasi2', 'poster_covid1', 'poster_covid2', '4-revisi', '5-revisi'],
     'covid': ['poster_covid1', 'poster_covid2'],
     'jumpscare': ['abi'],
-    'dokumen':['MAKALAH BING KARIR A_Company Research_202131093_Dimas Abi Mesti']
+    'dokumen': ['MAKALAH','KUITANSI']
 }
 
 # Fungsi untuk memeriksa ekstensi file yang diunggah
@@ -32,7 +30,7 @@ def find_images(keyword):
     # Cari kata kunci yang mirip dalam image_data menggunakan fuzzy matching
     possible_matches = process.extract(keyword, image_data.keys(), limit=2, scorer=fuzz.ratio)
     
-    # Ambil hasil terbaik yang memiliki rasio kecocokan lebih dari 60%
+    # Ambil hasil terbaik yang memiliki rasio kecocokan lebih dari 50%
     for match, score in possible_matches:
         if score > 50:  # Threshold minimal kecocokan
             for image_name in image_data[match]:
@@ -42,12 +40,6 @@ def find_images(keyword):
                     if os.path.exists(image_path):
                         found_images.append(f"{image_name}.{ext}")
     return found_images
-
-# Fungsi untuk membaca dan mengonversi file DOCX ke HTML
-# def read_docx(file_path):
-#     with open(file_path, "rb") as docx_file:
-#         result = mammoth.convert_to_html(docx_file)
-#         return result.value
 
 # Fungsi untuk membaca file Excel dan mengonversinya menjadi tabel HTML
 def read_excel(file_path):
@@ -79,15 +71,19 @@ def search_results(search_term):
             # Tampilkan PDF dengan <embed> atau <iframe>
             file_previews.append({'filename': filename, 'type': 'pdf'})
         elif file_extension == 'docx':
-            # Konversi DOCX ke HTML
-            content = read_docx(file_path)
-            file_previews.append({'filename': filename, 'type': 'docx', 'content': content})
+            # Tampilkan ikon untuk file DOCX
+            file_previews.append({'filename': filename, 'type': 'docx'})
         elif file_extension == 'xlsx':
             # Baca Excel dan konversi ke tabel HTML
             content = read_excel(file_path)
             file_previews.append({'filename': filename, 'type': 'excel', 'content': content})
 
     return render_template('results.html', images=images, file_previews=file_previews, search_term=search_term)
+
+# Rute untuk mengunduh file
+@app.route('/download/<filename>')
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 if __name__ == '__main__':
     # Buat folder penyimpanan jika belum ada
