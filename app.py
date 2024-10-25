@@ -17,8 +17,9 @@ image_data = {
     'penambalan gigi': ['poster_imunisasi1', 'poster_imunisasi2', 'poster_covid1', 'poster_covid2', '4-revisi', '5-revisi'],
     'covid': ['poster_covid1', 'poster_covid2'],
     'jumpscare': ['abi'],
-    'dokumen': ['MAKALAH','KUITANSI']
+    # 'dokumen': ['MAKALAH','KUITANSI','LAPORANMAGANG','timeline_project','PKB']
 }
+# untuk dictionary dokumen tidak perlu menambahkan filenya di dalam dictionary dia bisa membaca langsung di folder uploads
 
 # Fungsi untuk memeriksa ekstensi file yang diunggah
 def allowed_file(filename):
@@ -57,28 +58,31 @@ def index():
 # Rute untuk menampilkan hasil pencarian di halaman baru
 @app.route('/results/<search_term>')
 def search_results(search_term):
+    # Pencarian gambar
     images = find_images(search_term)
-    uploaded_files = os.listdir(app.config['UPLOAD_FOLDER'])
+    
+    # Kondisi untuk memutuskan apakah ada gambar yang ditemukan
+    not_found = len(images) == 0
+
+    # Cek apakah pencarian dilakukan untuk dokumen
+    # Jika pencarian bukan untuk dokumen, jangan tampilkan dokumen
+    show_documents = search_term.lower() in ['dokumen', 'document']
+
+    # Ambil daftar file dokumen jika 'show_documents' adalah True
     file_previews = []
+    if show_documents:
+        uploaded_files = os.listdir(app.config['UPLOAD_FOLDER'])
+        for filename in uploaded_files:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file_extension = filename.rsplit('.', 1)[1].lower()
+            content = None
 
-    # Cek setiap file yang ada di folder upload dan buat tampilan yang sesuai
-    for filename in uploaded_files:
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file_extension = filename.rsplit('.', 1)[1].lower()
-        content = None
+            if file_extension in ['pdf', 'docx', 'xlsx']:
+                # Tampilkan jenis file sesuai tipe
+                file_previews.append({'filename': filename, 'type': file_extension})
 
-        if file_extension == 'pdf':
-            # Tampilkan PDF dengan <embed> atau <iframe>
-            file_previews.append({'filename': filename, 'type': 'pdf'})
-        elif file_extension == 'docx':
-            # Tampilkan ikon untuk file DOCX
-            file_previews.append({'filename': filename, 'type': 'docx'})
-        elif file_extension == 'xlsx':
-            # Baca Excel dan konversi ke tabel HTML
-            content = read_excel(file_path)
-            file_previews.append({'filename': filename, 'type': 'excel', 'content': content})
+    return render_template('results.html', images=images, file_previews=file_previews, search_term=search_term, not_found=not_found)
 
-    return render_template('results.html', images=images, file_previews=file_previews, search_term=search_term)
 
 # Rute untuk mengunduh file
 @app.route('/download/<filename>')

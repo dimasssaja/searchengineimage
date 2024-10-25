@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,68 +12,66 @@
 <body>
     <div class="search">
         <form method="POST" action="/" id="searchForm">
-            <div class="search-container">
-                <span class="material-icons">search</span>
-                <input id="searchInput" name="search" placeholder="Cari poster..." />
-                <button type="submit">
-                    Go!
-                    <span class="material-icons submit-icon">bolt</span>
-                </button>
-            </div>
+          <div class="search-container">
+            <span class="material-icons">search</span>
+            <input id="searchInput" name="search" placeholder="Cari poster..." />
+            <button type="submit">
+              Go!
+              <span class="material-icons submit-icon">bolt</span>
+            </button>
+          </div>
         </form>
-        <h4>Hasil Pencarian untuk "{{ search_term }}"</h4>
+        <button type="submit">
+    <h4>Hasil Pencarian untuk "{{ search_term }}"</h4>
 
-        {% if not_found %}
-            <p>Poster dengan kata kunci '{{ search_term }}' tidak ditemukan.</p>
-        {% endif %}
+    {% if not_found %}
+        <p>Poster dengan kata kunci '{{ search_term }}' tidak ditemukan.</p>
+    {% endif %}
 
-        <!-- Grid untuk gambar -->
-        <div class="gallery">
-            {% for image in images %}
-                <div class="image-item">
-                    <img src="{{ url_for('static', filename='images/' ~ image) }}" alt="Poster" onclick="openModal(this)">
-                    <div class="description">
-                        <h2>Judul Poster</h2>
-                        <p>Deskripsi singkat tentang poster ini.</p>
+    <!-- Grid untuk gambar -->
+    <div class="gallery">
+        {% for image in images %}
+            <div class="image-item">
+                <img src="{{ url_for('static', filename='images/' ~ image) }}" alt="Poster" onclick="openModal(this)">
+                <div class="description">
+                    <h2>Judul Poster</h2>
+                    <p>Deskripsi singkat tentang poster ini.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Bagian untuk menampilkan file yang dapat diunduh -->
+    <div class="file-list">
+        <div class="file-grid">
+            {% for file in file_previews %}
+                <div class="file-item">
+                    <div class="file-icon">
+                        <!-- Gambar icon PDF atau format lain sesuai ekstensi -->
+                        {% if file.type == 'pdf' %}
+                            <img src="{{ url_for('static', filename='images/pdfic.jpg') }}" alt="PDF Icon">
+                        {% elif file.type == 'docx' %}
+                            <img src="{{ url_for('static', filename='images/docx-icon.jpg') }}" alt="DOCX Icon">
+                        {% elif file.type == 'xlsx' %}
+                            <img src="{{ url_for('static', filename='images/excelic.jpg') }}" alt="Excel Icon">
+                        {% endif %}
+                    </div>
+                    <div class="file-info">
+                        <p>{{ file.filename }}</p>
+                        <a href="{{ url_for('download_file', filename=file.filename) }}" class="download-icon">
+                            <span class="material-icons">download</span>
+                        </a>
                     </div>
                 </div>
             {% endfor %}
         </div>
-
-        <!-- Bagian untuk menampilkan file yang dapat diunduh -->
-
-        <div class="file-list">
-            <h4></h4>
-            <div class="file-grid">
-                {% for file in file_previews %}
-                    <div class="file-item">
-                        <div class="file-icon">
-                            <!-- Gambar icon PDF atau format lain sesuai ekstensi -->
-                            {% if file.type == 'pdf' %}
-                                <img src="{{ url_for('static', filename='images/pdfic.jpg') }}" alt="PDF Icon">
-                            {% elif file.type == 'docx' %}
-                                <img src="{{ url_for('static', filename='images/docx-icon.png') }}" alt="DOCX Icon">
-                            {% elif file.type == 'excel' %}
-                                <img src="{{ url_for('static', filename='images/excel-icon.png') }}" alt="Excel Icon">
-                            {% endif %}
-                        </div>
-                        <div class="file-info">
-                            <p>{{ file.filename }}</p>
-                            <a href="{{ url_for('download_file', filename=file.filename) }}" class="download-icon">
-                                <span class="material-icons">download</span>
-                            </a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+    </div>
 
 
-        <!-- Modal untuk menampilkan gambar besar -->
-        <div id="imageModal" class="modal">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <img id="modalImage" src="" alt="Zoomed Image">
-        </div>
+    <!-- Modal untuk menampilkan gambar besar -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="Zoomed Image">
     </div>
 
     <!-- JavaScript untuk modal -->
